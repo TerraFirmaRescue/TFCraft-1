@@ -34,6 +34,8 @@ import com.bioxx.tfc.api.Enums.EnumFoodGroup;
 import com.bioxx.tfc.api.Enums.EnumSize;
 import com.bioxx.tfc.api.Enums.EnumWeight;
 
+import static net.minecraft.init.Items.glass_bottle;
+
 public class ItemSetup extends TFCItems {
 
 	public static void setup()
@@ -69,7 +71,7 @@ public class ItemSetup extends TFCItems {
 		Items.bow = (ItemBow) bow;
 		arrow = new ItemArrow().setUnlocalizedName("arrow").setCreativeTab(TFCTabs.TFC_WEAPONS);
 		dye = new ItemDyeCustom().setUnlocalizedName("dyePowder").setTextureName("dye_powder").setCreativeTab(TFCTabs.TFC_MATERIALS);
-		glassBottle = new ItemGlassBottle().setUnlocalizedName("Glass Bottle");
+		//glassBottle = new ItemGlassBottle().setUnlocalizedName("Glass Bottle");
 		potion = new ItemCustomPotion().setUnlocalizedName("potion").setTextureName("potion");
 		rope = new ItemCustomLeash().setUnlocalizedName("Rope").setCreativeTab(TFCTabs.TFC_TOOLS);
 		Items.lead = rope;
@@ -79,6 +81,7 @@ public class ItemSetup extends TFCItems {
 		sluiceItem = new ItemSluice().setFolder("devices/").setUnlocalizedName("SluiceItem").setCreativeTab(TFCTabs.TFC_DEVICES);
 
 		shears = new ItemShears(0, ironToolMaterial).setUnlocalizedName("shears").setTextureName("shears");
+		shearsBlackSteel = new ItemShears(0, blackSteelToolMaterial).setUnlocalizedName("Black Steel Shears").setMaxDamage(16).setTextureName("Black Steel Shears");
 
 		proPickBismuthBronze = new ItemProPick().setUnlocalizedName("Bismuth Bronze ProPick").setMaxDamage(bismuthBronzeUses/3);
 		proPickBlackBronze = new ItemProPick().setUnlocalizedName("Black Bronze ProPick").setMaxDamage(blackBronzeUses/3);
@@ -113,6 +116,9 @@ public class ItemSetup extends TFCItems {
 		zincIngot = new ItemIngot().setUnlocalizedName("Zinc Ingot");
 		electrumIngot = new ItemIngot().setUnlocalizedName("Electrum Ingot");
 		cupronickelIngot = new ItemIngot().setUnlocalizedName("Cupronickel Ingot");
+		osmiumIngot = new ItemIngot().setUnlocalizedName("Osmium Ingot");
+		aluminumIngot = new ItemIngot().setUnlocalizedName("Aluminum Ingot");
+		tungstenIngot = new ItemIngot().setUnlocalizedName("Tungsten Ingot");
 
 		bismuthIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Bismuth Double Ingot")).setSize(EnumSize.LARGE).setMetal("Bismuth", 200);
 		bismuthBronzeIngot2x  = ((ItemIngot)new ItemIngot().setUnlocalizedName("Bismuth Bronze Double Ingot")).setSize(EnumSize.LARGE).setMetal("Bismuth Bronze", 200);
@@ -137,6 +143,9 @@ public class ItemSetup extends TFCItems {
 		zincIngot2x  = ((ItemIngot)new ItemIngot().setUnlocalizedName("Zinc Double Ingot")).setSize(EnumSize.LARGE).setMetal("Zinc", 200);
 		electrumIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Electrum Double Ingot")).setSize(EnumSize.LARGE).setMetal("Electrum", 200);
 		cupronickelIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Cupronickel Double Ingot")).setSize(EnumSize.LARGE).setMetal("Cupronickel", 200);
+		osmiumIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Osmium Double Ingot")).setSize(EnumSize.LARGE).setMetal("Osmium", 200);
+		aluminumIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Aluminum Double Ingot")).setSize(EnumSize.LARGE).setMetal("Aluminum", 200);
+		tungstenIngot2x = ((ItemIngot)new ItemIngot().setUnlocalizedName("Tungsten Double Ingot")).setSize(EnumSize.LARGE).setMetal("Tungsten", 200);
 
 		gemRuby = new ItemGem().setUnlocalizedName("Ruby");
 		gemSapphire = new ItemGem().setUnlocalizedName("Sapphire");
@@ -264,8 +273,11 @@ public class ItemSetup extends TFCItems {
 		highCarbonSteelIngot = new ItemIngot(false).setUnlocalizedName("HC Steel Ingot");
 
 		smallMetalChunk = new ItemNugget().setUnlocalizedName("MetalNugget");
+		metalDust = new ItemMetalDust().setUnlocalizedName("MetalDust");
 		oreChunk = new ItemOre().setFolder("ore/").setUnlocalizedName("Ore");
+		oreMineralChunk = new ItemMineralOre().setFolder("ore/").setUnlocalizedName("MineralOre");
 		smallOreChunk = new ItemOreSmall().setUnlocalizedName("Small Ore");
+		orePile = new ItemOrePile().setUnlocalizedName("Ore Pile");
 		powder = new ItemTerra().setMetaNames(Global.POWDER).setUnlocalizedName("Powder").setCreativeTab(TFCTabs.TFC_MATERIALS);
 		logs = new ItemLogs().setUnlocalizedName("Log");
 
@@ -323,6 +335,9 @@ public class ItemSetup extends TFCItems {
 		zincUnshaped = new ItemMeltedMetal().setUnlocalizedName("Zinc Unshaped");
 		electrumUnshaped = new ItemMeltedMetal().setUnlocalizedName("Electrum Unshaped");
 		cupronickelUnshaped = new ItemMeltedMetal().setUnlocalizedName("Cupronickel Unshaped");
+		osmiumUnshaped = new ItemMeltedMetal().setUnlocalizedName("Osmium Unshaped");
+		aluminumUnshaped = new ItemMeltedMetal().setUnlocalizedName("Aluminum Unshaped");
+		tungstenUnshaped = new ItemMeltedMetal().setUnlocalizedName("Tungsten Unshaped");
 
 		//Hammers
 		stoneHammer = new ItemHammer(igInToolMaterial, 60).setUnlocalizedName("Stone Hammer").setMaxDamage(igInStoneUses);
@@ -477,6 +492,7 @@ public class ItemSetup extends TFCItems {
 		woodenBucketWater = new ItemCustomBucket(TFCBlocks.freshWater, woodenBucketEmpty).setUnlocalizedName("Wooden Bucket Water");
 		woodenBucketSaltWater = new ItemCustomBucket(TFCBlocks.saltWater, woodenBucketEmpty).setUnlocalizedName("Wooden Bucket Salt Water");
 		woodenBucketMilk = new ItemCustomBucketMilk().setUnlocalizedName("Wooden Bucket Milk").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_FOODS);
+		bottleMilk = new ItemBottleMilk().setUnlocalizedName("Bottle of Milk").setContainerItem(glass_bottle).setCreativeTab(TFCTabs.TFC_FOODS);
 
 		bismuthBronzeKnifeHead = new ItemMiscToolHead().setUnlocalizedName("Bismuth Bronze Knife Blade");
 		blackBronzeKnifeHead = new ItemMiscToolHead().setUnlocalizedName("Black Bronze Knife Blade");
@@ -574,6 +590,10 @@ public class ItemSetup extends TFCItems {
 		stoneBrick = new ItemStoneBrick().setFolder("tools/").setUnlocalizedName("ItemStoneBrick");
 		mortar = new ItemTerra().setFolder("tools/").setUnlocalizedName("Mortar").setCreativeTab(TFCTabs.TFC_MATERIALS);
 		vinegar = new ItemCustomBucket(Blocks.air).setFolder("food/").setUnlocalizedName("Vinegar").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_FOODS);
+		brine = new ItemCustomBucket(Blocks.air).setFolder("food/").setUnlocalizedName("Brine").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_FOODS);
+		oliveOil = new ItemCustomBucket(Blocks.air).setFolder("food/").setUnlocalizedName("OliveOil").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_FOODS);
+		limewater = new ItemCustomBucket(Blocks.air).setFolder("food/").setUnlocalizedName("Limewater").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_MATERIALS);
+		tannin = new ItemCustomBucket(Blocks.air).setFolder("food/").setUnlocalizedName("Tannin").setContainerItem(woodenBucketEmpty).setCreativeTab(TFCTabs.TFC_MATERIALS);
 		hide = new ItemRawHide().setFolder("tools/").setUnlocalizedName("Hide").setCreativeTab(TFCTabs.TFC_MATERIALS);
 		soakedHide = new ItemRawHide().setFolder("tools/").setUnlocalizedName("Soaked Hide").setCreativeTab(TFCTabs.TFC_MATERIALS);
 		scrapedHide = new ItemRawHide().setFolder("tools/").setUnlocalizedName("Scraped Hide").setCreativeTab(TFCTabs.TFC_MATERIALS);
@@ -680,8 +700,8 @@ public class ItemSetup extends TFCItems {
 				blackSteelUnshaped,blueSteelUnshaped,brassUnshaped,bronzeUnshaped,
 				copperUnshaped,goldUnshaped,wroughtIronUnshaped,leadUnshaped,nickelUnshaped,pigIronUnshaped,
 				platinumUnshaped,redSteelUnshaped,roseGoldUnshaped,silverUnshaped,
-				steelUnshaped,sterlingSilverUnshaped,tinUnshaped,zincUnshaped,electrumUnshaped,cupronickelUnshaped, highCarbonSteelUnshaped, weakSteelUnshaped,
-				highCarbonBlackSteelUnshaped, highCarbonBlueSteelUnshaped, highCarbonRedSteelUnshaped, 
+				steelUnshaped,sterlingSilverUnshaped,tinUnshaped,zincUnshaped,electrumUnshaped,cupronickelUnshaped, osmiumUnshaped, aluminumUnshaped, tungstenUnshaped,
+				highCarbonSteelUnshaped, weakSteelUnshaped, highCarbonBlackSteelUnshaped, highCarbonBlueSteelUnshaped, highCarbonRedSteelUnshaped,
 				weakBlueSteelUnshaped, weakRedSteelUnshaped};
 
 		Recipes.hammers  = new Item[]{stoneHammer,bismuthBronzeHammer,blackBronzeHammer,
@@ -903,7 +923,7 @@ public class ItemSetup extends TFCItems {
 
 
 
-		fruitTreeSapling = new ItemFruitTreeSapling().setUnlocalizedName("FruitSapling");
+		//fruitTreeSapling = new ItemFruitTreeSapling().setUnlocalizedName("FruitSapling");
 
 		//mushroom is a food now, with foodID 61
 		//pumpkin is a food now, id = 61
@@ -946,6 +966,9 @@ public class ItemSetup extends TFCItems {
 		Global.ZINC = new Metal("Zinc", TFCItems.zincUnshaped, TFCItems.zincIngot);
 		Global.ELECTRUM = new Metal("Electrum", TFCItems.electrumUnshaped, TFCItems.electrumIngot);
 		Global.CUPRONICKEL = new Metal("Cupronickel", TFCItems.cupronickelUnshaped, TFCItems.cupronickelIngot);
+		Global.OSMIUM = new Metal("Osmium", TFCItems.osmiumUnshaped, TFCItems.osmiumIngot);
+		Global.ALUMINUM = new Metal("Aluminum", TFCItems.aluminumUnshaped, TFCItems.aluminumIngot);
+		Global.TUNGSTEN = new Metal("Tungsten", TFCItems.tungstenUnshaped, TFCItems.tungstenIngot);
 		Global.WEAKSTEEL = new Metal("Weak Steel", TFCItems.weakSteelUnshaped, TFCItems.weakSteelIngot);
 		Global.HCBLACKSTEEL = new Metal("HC Black Steel", TFCItems.highCarbonBlackSteelUnshaped, TFCItems.highCarbonBlackSteelIngot);
 		Global.WEAKREDSTEEL = new Metal("Weak Red Steel", TFCItems.weakRedSteelUnshaped, TFCItems.weakRedSteelIngot);
@@ -977,6 +1000,9 @@ public class ItemSetup extends TFCItems {
 		MetalRegistry.instance.addMetal(Global.ZINC, Alloy.EnumTier.TierI);
 		MetalRegistry.instance.addMetal(Global.ELECTRUM, Alloy.EnumTier.TierI);
 		MetalRegistry.instance.addMetal(Global.CUPRONICKEL, Alloy.EnumTier.TierI);
+		MetalRegistry.instance.addMetal(Global.OSMIUM, Alloy.EnumTier.TierV);
+		MetalRegistry.instance.addMetal(Global.ALUMINUM, Alloy.EnumTier.TierI);
+		MetalRegistry.instance.addMetal(Global.TUNGSTEN, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.WEAKSTEEL, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.HCBLACKSTEEL, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.WEAKREDSTEEL, Alloy.EnumTier.TierV);
@@ -1074,6 +1100,9 @@ public class ItemSetup extends TFCItems {
 		zincSheet = 			((ItemMetalSheet) new ItemMetalSheet(20).setUnlocalizedName("Zinc Sheet")).setMetal("Zinc", 200);
 		electrumSheet = 		((ItemMetalSheet) new ItemMetalSheet(21).setUnlocalizedName("Electrum Sheet")).setMetal("Electrum", 200);
 		cupronickelSheet = 		((ItemMetalSheet) new ItemMetalSheet(22).setUnlocalizedName("Cupronickel Sheet")).setMetal("Cupronickel", 200);
+		osmiumSheet = 			((ItemMetalSheet) new ItemMetalSheet(23).setUnlocalizedName("Osmium Sheet")).setMetal("Osmium", 200);
+		aluminumSheet = 		((ItemMetalSheet) new ItemMetalSheet(24).setUnlocalizedName("Aluminum Sheet")).setMetal("Aluminum", 200);
+		tungstenSheet = 		((ItemMetalSheet) new ItemMetalSheet(25).setUnlocalizedName("Tungsten Sheet")).setMetal("Tungsten", 200);
 
 		bismuthSheet2x = 		((ItemMetalSheet2x) new ItemMetalSheet2x(0).setUnlocalizedName("Bismuth Double Sheet")).setMetal("Bismuth", 400);
 		bismuthBronzeSheet2x = 	((ItemMetalSheet2x) new ItemMetalSheet2x(1).setUnlocalizedName("Bismuth Bronze Double Sheet")).setMetal("Bismuth Bronze", 400);
@@ -1090,6 +1119,9 @@ public class ItemSetup extends TFCItems {
 		zincSheet2x = 			((ItemMetalSheet2x) new ItemMetalSheet2x(20).setUnlocalizedName("Zinc Double Sheet")).setMetal("Zinc", 400);
 		electrumSheet2x = 		((ItemMetalSheet2x) new ItemMetalSheet2x(21).setUnlocalizedName("Electrum Double Sheet")).setMetal("Electrum", 400);
 		cupronickelSheet2x = 	((ItemMetalSheet2x) new ItemMetalSheet2x(22).setUnlocalizedName("Cupronickel Double Sheet")).setMetal("Cupronickel", 400);
+		osmiumSheet2x = 		((ItemMetalSheet2x) new ItemMetalSheet2x(23).setUnlocalizedName("Osmium Double Sheet")).setMetal("Osmium", 400);
+		aluminumSheet2x = 		((ItemMetalSheet2x) new ItemMetalSheet2x(24).setUnlocalizedName("Aluminum Double Sheet")).setMetal("Aluminum", 400);
+		tungstenSheet2x = 		((ItemMetalSheet2x) new ItemMetalSheet2x(25).setUnlocalizedName("Tungsten Double Sheet")).setMetal("Tungsten", 400);
 
 		i = 0;
 		brassSheet = 			new ItemMetalSheet(5).setMetal("Brass", 200).setUnlocalizedName(namesNSO[i++]+" Sheet");

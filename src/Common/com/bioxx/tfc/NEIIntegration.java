@@ -1,15 +1,5 @@
 package com.bioxx.tfc;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-
 import codechicken.nei.api.API;
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
@@ -18,6 +8,13 @@ import com.bioxx.tfc.GUI.GuiLargeVessel;
 import com.bioxx.tfc.api.TFCBlocks;
 import com.bioxx.tfc.api.TFCItems;
 import com.bioxx.tfc.api.TFCOptions;
+import net.minecraft.block.Block;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.List;
 
 /**
  * @author Dries007
@@ -90,6 +87,7 @@ public class NEIIntegration
 			API.hideItem(new ItemStack(TFCBlocks.ore));
 			API.hideItem(new ItemStack(TFCBlocks.ore2));
 			API.hideItem(new ItemStack(TFCBlocks.ore3));
+			API.hideItem(new ItemStack(TFCBlocks.ore4));
 			API.hideItem(new ItemStack(TFCBlocks.pottery));
 			//codechicken.nei.api.API.hideItem(new ItemStack(TFCItems.PotteryPot, 1, OreDictionary.WILDCARD_VALUE));
 			API.hideItem(new ItemStack(TFCBlocks.reeds));

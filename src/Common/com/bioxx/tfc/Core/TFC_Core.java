@@ -1,12 +1,27 @@
 package com.bioxx.tfc.Core;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
+import com.bioxx.tfc.Chunkdata.ChunkData;
+import com.bioxx.tfc.Chunkdata.ChunkDataManager;
+import com.bioxx.tfc.Core.Player.BodyTempStats;
+import com.bioxx.tfc.Core.Player.FoodStatsTFC;
+import com.bioxx.tfc.Core.Player.InventoryPlayerTFC;
+import com.bioxx.tfc.Core.Player.SkillStats;
+import com.bioxx.tfc.Food.ItemFoodTFC;
+import com.bioxx.tfc.Items.ItemBlocks.ItemTerraBlock;
+import com.bioxx.tfc.Items.ItemOre;
+import com.bioxx.tfc.Items.ItemTerra;
+import com.bioxx.tfc.TerraFirmaCraft;
 import com.bioxx.tfc.TileEntities.*;
+import com.bioxx.tfc.WorldGen.TFCBiome;
+import com.bioxx.tfc.api.Constant.Global;
+import com.bioxx.tfc.api.Entities.IAnimal;
+import com.bioxx.tfc.api.Enums.EnumFuelMaterial;
+import com.bioxx.tfc.api.*;
+import com.bioxx.tfc.api.Interfaces.IFood;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.BlockStainedGlass;
@@ -30,35 +45,15 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.storage.WorldInfo;
-
 import net.minecraftforge.common.util.ForgeDirection;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.bioxx.tfc.TerraFirmaCraft;
-import com.bioxx.tfc.Chunkdata.ChunkData;
-import com.bioxx.tfc.Chunkdata.ChunkDataManager;
-import com.bioxx.tfc.Core.Player.BodyTempStats;
-import com.bioxx.tfc.Core.Player.FoodStatsTFC;
-import com.bioxx.tfc.Core.Player.InventoryPlayerTFC;
-import com.bioxx.tfc.Core.Player.SkillStats;
-import com.bioxx.tfc.Food.ItemFoodTFC;
-import com.bioxx.tfc.Items.ItemOre;
-import com.bioxx.tfc.Items.ItemTerra;
-import com.bioxx.tfc.Items.ItemBlocks.ItemTerraBlock;
-import com.bioxx.tfc.TileEntities.TEMetalSheet;
-import com.bioxx.tfc.WorldGen.TFCBiome;
-import com.bioxx.tfc.api.*;
-import com.bioxx.tfc.api.Constant.Global;
-import com.bioxx.tfc.api.Entities.IAnimal;
-import com.bioxx.tfc.api.Enums.EnumFuelMaterial;
-import com.bioxx.tfc.api.Interfaces.IFood;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class TFC_Core
 {
@@ -658,10 +653,11 @@ public class TFC_Core
 	{
 		if(TFC_Core.isDirt(block))
 			return block;
-		if (block == TFCBlocks.grass || block == TFCBlocks.dryGrass)
+		if (block == TFCBlocks.grass || block == TFCBlocks.dryGrass || block == TFCBlocks.tilledSoil)
 			return TFCBlocks.dirt;
 		return TFCBlocks.dirt2;
 	}
+
 
 	public static Block getTypeForSoil(Block block)
 	{
@@ -753,6 +749,8 @@ public class TFC_Core
 			return EnumFuelMaterial.COAL;
 		else if(is.getItem() == TFCItems.coal && is.getItemDamage() == 1)
 			return EnumFuelMaterial.CHARCOAL;
+		else if(is.getItem() == TFCItems.coal && is.getItemDamage() == 2)
+			return EnumFuelMaterial.COKE;
 		if(is.getItemDamage() == 0)
 			return EnumFuelMaterial.ASH;
 		else if (is.getItemDamage() == 1)
@@ -1103,10 +1101,12 @@ public class TFC_Core
 		}
 	}
 
+
+
 	/**
 	 * @param is
 	 * @param baseDecayMod
-	 * @param nbt
+	// * @param nbt
 	 */
 	public static ItemStack tickDecay(ItemStack is, World world, int x, int y, int z, float environmentalDecayFactor, float baseDecayMod)
 	{
@@ -1259,9 +1259,14 @@ public class TFC_Core
 
 	public static boolean isValidCharcoalPitCover(Block block)
 	{
-		if(Blocks.fire.getFlammability(block) > 0 && block != TFCBlocks.logPile) return false;
+		Boolean pile = false;
+		if(block == TFCBlocks.logPile || block == TFCBlocks.coalPile)
+		{ pile = true; }
+		if(Blocks.fire.getFlammability(block) > 0 && pile == false)
+			return false;
 
 		return block == TFCBlocks.logPile
+				|| block == TFCBlocks.coalPile
 				|| isCobbleStone(block)
 				|| isBrickStone(block)
 				|| isSmoothStone(block)
@@ -1397,15 +1402,14 @@ public class TFC_Core
 		if (world.canBlockSeeTheSky(x, y + 1, z)) // Either no blocks, or transparent blocks above.
 		{
 			// Glass blocks, or blocks with a solid top or bottom block the rain.
-			if (world.getBlock(x, highestY, z) instanceof BlockGlass
+			if (highestY > y && (world.getBlock(x, highestY, z) instanceof BlockGlass
 					|| world.getBlock(x, highestY, z) instanceof BlockStainedGlass
 					|| world.isSideSolid(x, highestY, z, ForgeDirection.UP) 
-					|| world.isSideSolid(x, highestY, z, ForgeDirection.DOWN))
+					|| world.isSideSolid(x, highestY, z, ForgeDirection.DOWN)))
 				isExposed = false;
 		}
 		else // Can't see the sky
 			isExposed = false;
-
 		return world.isRaining() && isExposed;
 	}
 }

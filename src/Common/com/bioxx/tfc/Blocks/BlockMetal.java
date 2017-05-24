@@ -3,7 +3,6 @@ package com.bioxx.tfc.Blocks;
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.Items.Tools.ItemHammer;
 import com.bioxx.tfc.Reference;
-import com.bioxx.tfc.api.TFCBlocks;
 import com.bioxx.tfc.api.Constant.Global;
 import com.bioxx.tfc.api.Tools.IToolChisel;
 import cpw.mods.fml.relauncher.Side;
@@ -13,7 +12,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -31,8 +29,8 @@ public class BlockMetal extends BlockTerra
     {
         super(Material.iron);
         setCreativeTab(TFCTabs.TFC_MATERIALS);
-        metalNames = new String[16];
-        System.arraycopy(Global.METAL_ALL, 0, metalNames, 0, 16);
+        metalNames = new String[Global.METAL_ALL.length];
+        System.arraycopy(Global.METAL_ALL, 0, metalNames, 0, Global.METAL_ALL.length);
         icons = new IIcon[metalNames.length];
     }
 

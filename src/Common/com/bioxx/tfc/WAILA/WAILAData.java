@@ -187,6 +187,9 @@ public class WAILAData implements IWailaDataProvider
 		else if (tileEntity instanceof TELogPile)
 			currenttip = logPileBody(itemStack, currenttip, accessor, config);
 
+		else if (tileEntity instanceof TECoalPile)
+			currenttip = coalPileBody(itemStack, currenttip, accessor, config);
+
 		else if (tileEntity instanceof TELoom)
 			currenttip = loomBody(itemStack, currenttip, accessor, config);
 
@@ -303,6 +306,9 @@ public class WAILAData implements IWailaDataProvider
 
 		reg.registerBodyProvider(new WAILAData(), TELogPile.class);
 		reg.registerNBTProvider(new WAILAData(), TELogPile.class);
+
+		reg.registerBodyProvider(new WAILAData(), TECoalPile.class);
+		reg.registerNBTProvider(new WAILAData(), TECoalPile.class);
 
 		reg.registerStackProvider(new WAILAData(), TELoom.class);
 		reg.registerBodyProvider(new WAILAData(), TELoom.class);
@@ -479,14 +485,20 @@ public class WAILAData implements IWailaDataProvider
 			else
 				itemstack = new ItemStack(TFCItems.oreChunk, 1, meta); // All normal quality ores.
 
-			if (meta == 14 || meta == 15) // Bituminous Coal & Lignite
-				itemstack = new ItemStack(TFCItems.coal);
+			return itemstack;
+		}
+		else if (accessor.getBlock() == TFCBlocks.ore2)
+		{
+			if (config.getConfig("tfc.oreQuality"))
+				itemstack = new ItemStack(TFCItems.oreChunk, 1, getOreGrade(te, meta + Global.ORE_METAL.length)); // Shows specific quality ore.
+			else
+				itemstack = new ItemStack(TFCItems.oreChunk, 1, meta + Global.ORE_METAL.length); // All normal quality ores.
 
 			return itemstack;
 		}
-		else if (accessor.getBlock() == TFCBlocks.ore2) // Minerals
+		else if (accessor.getBlock() == TFCBlocks.ore3) // Minerals
 		{
-			itemstack = new ItemStack(TFCItems.oreChunk, 1, meta + Global.ORE_METAL.length);
+			itemstack = new ItemStack(TFCItems.oreMineralChunk, 1, meta);
 			if (meta == 5)
 				itemstack = new ItemStack(TFCItems.gemDiamond); // Kaolinite
 			else if (meta == 13)
@@ -494,9 +506,11 @@ public class WAILAData implements IWailaDataProvider
 
 			return itemstack;
 		}
-		else if (accessor.getBlock() == TFCBlocks.ore3) // Minerals
+		else if (accessor.getBlock() == TFCBlocks.ore4) // Minerals
 		{
-			itemstack = new ItemStack(TFCItems.oreChunk, 1, meta + Global.ORE_METAL.length + Global.ORE_MINERAL.length);
+			itemstack = new ItemStack(TFCItems.oreMineralChunk, 1, meta + Global.ORE_MINERAL.length);
+			if(meta == 0 || meta == 1)
+				itemstack = new ItemStack(TFCItems.coal);
 			return itemstack;
 		}
 
@@ -566,26 +580,26 @@ public class WAILAData implements IWailaDataProvider
 	{
 		int meta = accessor.getMetadata();
 
-		if (accessor.getBlock() == TFCBlocks.ore)
+		if (accessor.getBlock() == TFCBlocks.ore4)
 		{
-			if (meta == 14)
+			if (meta == 0)
 			{
-				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.Ore.Bituminous Coal.name"));
+				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("tile.MineralOre.Bituminous Coal.name"));
 			}
-			else if (meta == 15)
+			else if (meta == 1)
 			{
-				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.Ore.Lignite.name"));
+				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("tile.MineralOre.Lignite.name"));
 			}
 		}
-		else if (accessor.getBlock() == TFCBlocks.ore2)
+		else if (accessor.getBlock() == TFCBlocks.ore3)
 		{
 			if (meta == 5)
 			{
-				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.Ore.Kimberlite.name"));
+				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.MineralOre.Kimberlite.name"));
 			}
 			else if (meta == 13)
 			{
-				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.Ore.Saltpeter.name"));
+				currenttip.set(0, EnumChatFormatting.WHITE.toString() + TFC_Core.translate("item.MineralOre.Saltpeter.name"));
 			}
 		}
 
@@ -931,6 +945,50 @@ public class WAILAData implements IWailaDataProvider
 		return currenttip;
 	}
 
+	public List<String> coalPileBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
+	{
+		NBTTagCompound tag = accessor.getNBTData();
+		Boolean isOnFire = tag.getBoolean("isOnFire");
+
+		if (isOnFire)
+		{
+			int fireTimer = tag.getInteger("fireTimer");
+			int hours = (int) (TFCOptions.cokePitBurnTime - (TFC_Time.getTotalHours() - fireTimer));
+			currenttip.add(hours + " " + TFC_Core.translate("gui.hoursRemaining") + " (" + Helper.roundNumber(100 - (hours / TFCOptions.cokePitBurnTime) * 100, 10) + "%)");
+		}
+		else
+		{
+			ItemStack storage[] = getStorage(tag, accessor.getTileEntity());
+			boolean counted[] = new boolean[] {false, false, false, false}; // Used to keep track of which slots have already been combined into others.
+
+			/**
+			 * Rather than just display the number of logs in each slot, I wanted to display the total number of each type of log in the pile.
+			 * There's very likely a much better way to do this, but it's all I could come up with for now.
+			 * Optimization PRs welcome. :) Kitty
+			 */
+			for (int j = 0; j < storage.length; j++) // Loop through the 4 storage slots
+			{
+				if (storage[j] != null && !counted[j]) // Make sure the slot is not empty, and has not already been accounted for
+				{
+					String coal = storage[j].getDisplayName() + " : ";
+					int count = storage[j].stackSize;
+					for (int k = j + 1; k < storage.length; k++) // Loop through all slots after the one being checked
+					{
+						if (storage[k] != null && storage[j].isItemEqual(storage[k])) // Make sure the comparison slot isn't empty, and see if it's the same type of log
+						{
+							count += storage[k].stackSize; // Increase the count for that log type
+							counted[k] = true; // Mark the combined slot as accounted for
+						}
+					}
+					currenttip.add(coal + count); // Add to the HUD display
+					counted[j] = true; // Mark the initial slot as accounted for
+				}
+			}
+		}
+
+		return currenttip;
+	}
+
 	public List<String> loomBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		NBTTagCompound tag = accessor.getNBTData();
@@ -1026,7 +1084,7 @@ public class WAILAData implements IWailaDataProvider
 				currenttip.add(TFC_Core.translate("gui.metal.Gold"));
 				break;
 			case 2:
-				currenttip.add(TFC_Core.translate("gui.ore.Platinum"));
+				currenttip.add(TFC_Core.translate("gui.metal.Platinum"));
 				break;
 			case 3:
 			case 10:
@@ -1040,7 +1098,7 @@ public class WAILAData implements IWailaDataProvider
 				currenttip.add(TFC_Core.translate("gui.metal.Tin"));
 				break;
 			case 6:
-				currenttip.add(TFC_Core.translate("gui.ore.Lead"));
+				currenttip.add(TFC_Core.translate("gui.metal.Lead"));
 				break;
 			case 7:
 				currenttip.add(TFC_Core.translate("gui.metal.Bismuth"));
@@ -1052,9 +1110,11 @@ public class WAILAData implements IWailaDataProvider
 				currenttip.add(TFC_Core.translate("gui.metal.Zinc"));
 				break;
 			case 14:
+				currenttip.add(TFC_Core.translate("gui.metal.Osmium"));
+				break;
 			case 15:
-				currenttip.add(TFC_Core.translate("item.coal.coal.name"));
-				return currenttip;
+				currenttip.add(TFC_Core.translate("gui.metal.Aluminum"));
+				break;
 			}
 
 			if (config.getConfig("tfc.oreQuality"))
@@ -1063,7 +1123,7 @@ public class WAILAData implements IWailaDataProvider
 
 				int ore = getOreGrade(te, meta);
 
-				int units = ore < 14 ? TFCOptions.normalOreUnits : ore < 49 ? TFCOptions.richOreUnits : ore < 63 ? TFCOptions.poorOreUnits : 0;
+				int units = ore < 18 ? TFCOptions.normalOreUnits : ore < 36 ? TFCOptions.richOreUnits : ore < 54 ? TFCOptions.poorOreUnits : 0;
 				if (units > 0)
 					currenttip.add(TFC_Core.translate("gui.units") + " : " + units);
 			}
@@ -1073,6 +1133,31 @@ public class WAILAData implements IWailaDataProvider
 		{
 			switch (meta)
 			{
+				case 0:
+				case 1:
+					currenttip.add(TFC_Core.translate("gui.metal.Tungsten"));
+					break;
+			}
+
+			if (config.getConfig("tfc.oreQuality"))
+			{
+				TEOre te = (TEOre) accessor.getTileEntity();
+
+				int ore = getOreGrade(te, meta + Global.ORE_METAL.length);
+
+				int units = ore < 18 ? TFCOptions.normalOreUnits : ore < 36 ? TFCOptions.richOreUnits : ore < 54 ? TFCOptions.poorOreUnits : 0;
+				if (units > 0)
+					currenttip.add(TFC_Core.translate("gui.units") + " : " + units);
+			}
+
+		}
+		else if (accessor.getBlock() == TFCBlocks.ore3)
+		{
+			switch (meta)
+			{
+			case 0:
+				currenttip.add(TFC_Core.translate("gui.ore.kaolinite"));
+				break;
 			case 1:
 				currenttip.add(TFC_Core.translate("gui.ore.gypsum"));
 				break;
@@ -1081,6 +1166,12 @@ public class WAILAData implements IWailaDataProvider
 				break;
 			case 3:
 				currenttip.add(TFC_Core.translate("gui.ore.selenite"));
+				break;
+			case 4:
+				currenttip.add(TFC_Core.translate("gui.ore.graphite"));
+				break;
+			case 5:
+				currenttip.add(TFC_Core.translate("item.Diamond.Normal.name"));
 				break;
 			case 6:
 				currenttip.add(TFC_Core.translate("gui.ore.petrifiedwood"));
@@ -1097,30 +1188,48 @@ public class WAILAData implements IWailaDataProvider
 			case 10:
 				currenttip.add(TFC_Core.translate("gui.ore.pitchblende"));
 				break;
-			case 14:
-				currenttip.add(TFC_Core.translate("gui.ore.serpentine"));
-				break;
-			case 5:
-				currenttip.add(TFC_Core.translate("item.Diamond.Normal.name"));
-				break;
 			case 11:
 			case 12:
 				currenttip.add(TFC_Core.translate("item.redstone.name"));
 				break;
+			case 13:
+				currenttip.add(TFC_Core.translate("item.Powder.Saltpeter Powder.name"));
+			case 14:
+				currenttip.add(TFC_Core.translate("gui.ore.serpentine"));
+				break;
 			case 15:
-				currenttip.add(TFC_Core.translate("item.Fertilizer.name"));
+				currenttip.add(TFC_Core.translate("item.Powder.Flux.name"));
 				break;
 			}
 		}
-		else if (accessor.getBlock() == TFCBlocks.ore3)
+		else if (accessor.getBlock() == TFCBlocks.ore4)
 		{
 			switch (meta)
 			{
 			case 0:
-				currenttip.add(TFC_Core.translate("item.Powder.Flux.name"));
-				break;
 			case 1:
+				currenttip.add(TFC_Core.translate("item.coal.coal.name"));
+				break;
+			case 2:
 				currenttip.add(TFC_Core.translate("gui.ore.olivine"));
+				break;
+			case 3:
+				currenttip.add(TFC_Core.translate("item.MineralOre.Lapis Lazuli"));
+				break;
+			case 4:
+				currenttip.add(TFC_Core.translate("item.Fertilizer.name"));
+				break;
+			case 5:
+				currenttip.add(TFC_Core.translate("gui.ore.apatite"));
+				break;
+			case 6:
+				currenttip.add(TFC_Core.translate("gui.ore.scapolite"));
+				break;
+			case 7:
+				currenttip.add(TFC_Core.translate("gui.ore.strontium"));
+				break;
+			case 15:
+				currenttip.add(TFC_Core.translate("gui.ore.quartz"));
 				break;
 			}
 		}
@@ -1320,8 +1429,14 @@ public class WAILAData implements IWailaDataProvider
 				currenttip.add(TFC_Core.translate("gui.metal.Zinc"));
 				break;
 			case 14:
+				currenttip.add(TFC_Core.translate("gui.metal.Osmium"));
+				break;
 			case 15:
-				currenttip.add(TFC_Core.translate("item.coal.coal.name"));
+				currenttip.add(TFC_Core.translate("gui.metal.Aluminum"));
+				break;
+			case 16:
+			case 17:
+				currenttip.add(TFC_Core.translate("gui.metal.Tungsten"));
 				return currenttip;
 			}
 		}
@@ -1350,15 +1465,15 @@ public class WAILAData implements IWailaDataProvider
 		return null;
 	}
 
-	private int getOreGrade(TEOre te, int ore)
+	public int getOreGrade(TEOre te, int ore)
 	{
-		if (te != null)
+		if(te != null)
 		{
 			int grade = te.extraData & 7;
-			if (grade == 1)
-				ore += 35;
-			else if (grade == 2)
-				ore += 49;
+			if(grade == 1)
+				ore += 18;
+			else if(grade == 2)
+				ore += 36;
 		}
 		return ore;
 	}
