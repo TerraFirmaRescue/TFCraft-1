@@ -1,4 +1,4 @@
-#en_US
+﻿#en_US
 #This is the Main language configuration file
 #
 #If you want to color code the text then I recommend you visit http://www.minecraftwiki.net/wiki/Formatting_codes#Color_codes
@@ -114,6 +114,7 @@ entity.skeletonTFC.name=Skeleton
 entity.slimeTFC.name=Slime
 entity.spiderTFC.name=Spider
 entity.zombieTFC.name=Zombie
+entity.witherTFC.name=Wither
 
 entity.arrowTFC.name=Arrow
 entity.standTFC.name=Armor Stand

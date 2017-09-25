@@ -58,4 +58,8 @@ public class TFC_MobData
 
 	//Ghast
 	public static final int GHAST_HEALTH = 1000;
+
+	//Wither
+	public static final int WITHER_DAMAGE = 250;
+	public static final int WITHER_HEALTH = 4000;
 }

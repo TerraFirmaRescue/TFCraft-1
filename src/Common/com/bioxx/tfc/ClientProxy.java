@@ -85,6 +85,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityEndermanTFC.class, new RenderEnderman());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPigZombieTFC.class, new RenderZombie());
 		RenderingRegistry.registerEntityRenderingHandler(EntityIronGolemTFC.class, new RenderIronGolem());
+		RenderingRegistry.registerEntityRenderingHandler(EntityWitherTFC.class, new RenderWither());
 		//RenderingRegistry.registerEntityRenderingHandler(EntityPlayer.class, new RenderPlayerTFC());
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectileTFC.class, new RenderArrow());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFishHookTFC.class, new RenderFish());
