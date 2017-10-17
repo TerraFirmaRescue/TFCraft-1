@@ -2,26 +2,123 @@ package com.bioxx.tfc.Entities.Mobs;
 
 import com.bioxx.tfc.Core.TFC_MobData;
 import com.bioxx.tfc.Entities.EntityWitherSkullTFC;
+import com.bioxx.tfc.TerraFirmaCraft;
+import com.bioxx.tfc.api.Enums.EnumDamageType;
+import com.bioxx.tfc.api.Interfaces.ICausesDamage;
 import com.bioxx.tfc.api.Interfaces.IInnateArmor;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Items;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.stats.AchievementList;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public class EntityWitherTFC extends EntityWither implements IInnateArmor
+import java.util.Iterator;
+import java.util.List;
+
+public class EntityWitherTFC extends EntityWither implements IInnateArmor, ICausesDamage, IRangedAttackMob
 {
     private float[] field_82220_d = new float[2];
     private float[] field_82221_e = new float[2];
     private float[] field_82217_f = new float[2];
     private float[] field_82218_g = new float[2];
+    private int[] field_82223_h = new int[2];
+    private int[] field_82224_i = new int[2];
+    private int field_82222_j;
+
+    /** Selector used to determine the entities a wither boss should attack. */
+    private static final IEntitySelector attackEntitySelector = new IEntitySelector()
+    {
+        private static final String __OBFID = "CL_00001662";
+        /**
+         * Return whether the specified entity is applicable to this filter.
+         */
+        public boolean isEntityApplicable(Entity p_82704_1_)
+        {
+            return p_82704_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_82704_1_).getCreatureAttribute() != EnumCreatureAttribute.UNDEAD;
+        }
+    };
+    private static final String __OBFID = "CL_00001661";
 
     public EntityWitherTFC(World par1World)
     {
         super(par1World);
+        this.setHealth(this.getMaxHealth());
+        this.setSize(0.9F, 4.0F);
+        this.isImmuneToFire = true;
+        this.getNavigator().setCanSwim(true);
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIArrowAttack(this, 1.0D, 40, 20.0F));
+        this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(7, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, false, false, attackEntitySelector));
+        this.experienceValue = 50;
+    }
 
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    @Override
+    public void writeEntityToNBT(NBTTagCompound p_70014_1_)
+    {
+        super.writeEntityToNBT(p_70014_1_);
+        p_70014_1_.setInteger("Invul", this.func_82212_n());
+    }
+
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    @Override
+    public void readEntityFromNBT(NBTTagCompound p_70037_1_)
+    {
+        super.readEntityFromNBT(p_70037_1_);
+        this.func_82215_s(p_70037_1_.getInteger("Invul"));
+    }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float getShadowSize()
+    {
+        return this.height / 8.0F;
+    }
+
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
+    @Override
+    protected String getLivingSound()
+    {
+        return "mob.wither.idle";
+    }
+
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
+    @Override
+    protected String getHurtSound()
+    {
+        return "mob.wither.hurt";
+    }
+
+    /**
+     * Returns the sound this mob makes on death.
+     */
+    @Override
+    protected String getDeathSound()
+    {
+        return "mob.wither.death";
     }
 
     @Override
@@ -132,11 +229,177 @@ public class EntityWitherTFC extends EntityWither implements IInnateArmor
     }
 
     @Override
-    protected void applyEntityAttributes()
+    protected void updateAITasks()
     {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(TFC_MobData.WITHER_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(TFC_MobData.WITHER_HEALTH);//MaxHealth
+        int i;
+
+        if (this.func_82212_n() > 0)
+        {
+            i = this.func_82212_n() - 1;
+
+            if (i <= 0)
+            {
+                this.worldObj.newExplosion(this, this.posX, this.posY + (double)this.getEyeHeight(), this.posZ, 7.0F, false, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
+                this.worldObj.playBroadcastSound(1013, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+            }
+
+            this.func_82215_s(i);
+
+            if (this.ticksExisted % 10 == 0)
+            {
+                this.heal(10.0F);
+            }
+        }
+        else
+        {
+            super.updateAITasks();
+            int i1;
+
+            for (i = 1; i < 3; ++i)
+            {
+                if (this.ticksExisted >= this.field_82223_h[i - 1])
+                {
+                    this.field_82223_h[i - 1] = this.ticksExisted + 10 + this.rand.nextInt(10);
+
+                    if (this.worldObj.difficultySetting == EnumDifficulty.NORMAL || this.worldObj.difficultySetting == EnumDifficulty.HARD)
+                    {
+                        int k2 = i - 1;
+                        int l2 = this.field_82224_i[i - 1];
+                        this.field_82224_i[k2] = this.field_82224_i[i - 1] + 1;
+
+                        if (l2 > 15)
+                        {
+                            float f = 10.0F;
+                            float f1 = 5.0F;
+                            double d0 = MathHelper.getRandomDoubleInRange(this.rand, this.posX - (double)f, this.posX + (double)f);
+                            double d1 = MathHelper.getRandomDoubleInRange(this.rand, this.posY - (double)f1, this.posY + (double)f1);
+                            double d2 = MathHelper.getRandomDoubleInRange(this.rand, this.posZ - (double)f, this.posZ + (double)f);
+                            this.func_82209_a(i + 1, d0, d1, d2, true);
+                            this.field_82224_i[i - 1] = 0;
+                        }
+                    }
+
+                    i1 = this.getWatchedTargetId(i);
+
+                    if (i1 > 0)
+                    {
+                        Entity entity = this.worldObj.getEntityByID(i1);
+
+                        if (entity != null && entity.isEntityAlive() && this.getDistanceSqToEntity(entity) <= 900.0D && this.canEntityBeSeen(entity))
+                        {
+                            this.func_82216_a(i + 1, (EntityLivingBase)entity);
+                            this.field_82223_h[i - 1] = this.ticksExisted + 40 + this.rand.nextInt(20);
+                            this.field_82224_i[i - 1] = 0;
+                        }
+                        else
+                        {
+                            this.func_82211_c(i, 0);
+                        }
+                    }
+                    else
+                    {
+                        List list = this.worldObj.selectEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(20.0D, 8.0D, 20.0D), attackEntitySelector);
+
+                        for (int k1 = 0; k1 < 10 && !list.isEmpty(); ++k1)
+                        {
+                            EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(this.rand.nextInt(list.size()));
+
+                            if (entitylivingbase != this && entitylivingbase.isEntityAlive() && this.canEntityBeSeen(entitylivingbase))
+                            {
+                                if (entitylivingbase instanceof EntityPlayer)
+                                {
+                                    if (!((EntityPlayer)entitylivingbase).capabilities.disableDamage)
+                                    {
+                                        this.func_82211_c(i, entitylivingbase.getEntityId());
+                                    }
+                                }
+                                else
+                                {
+                                    this.func_82211_c(i, entitylivingbase.getEntityId());
+                                }
+
+                                break;
+                            }
+
+                            list.remove(entitylivingbase);
+                        }
+                    }
+                }
+            }
+
+            if (this.getAttackTarget() != null)
+            {
+                this.func_82211_c(0, this.getAttackTarget().getEntityId());
+            }
+            else
+            {
+                this.func_82211_c(0, 0);
+            }
+
+            if (this.field_82222_j > 0)
+            {
+                --this.field_82222_j;
+
+                if (this.field_82222_j == 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"))
+                {
+                    i = MathHelper.floor_double(this.posY);
+                    i1 = MathHelper.floor_double(this.posX);
+                    int j1 = MathHelper.floor_double(this.posZ);
+                    boolean flag = false;
+
+                    for (int l1 = -1; l1 <= 1; ++l1)
+                    {
+                        for (int i2 = -1; i2 <= 1; ++i2)
+                        {
+                            for (int j = 0; j <= 3; ++j)
+                            {
+                                int j2 = i1 + l1;
+                                int k = i + j;
+                                int l = j1 + i2;
+                                Block block = this.worldObj.getBlock(j2, k, l);
+
+                                if (!block.isAir(worldObj, j2, k, l) && block.canEntityDestroy(worldObj, j2, k, l, this))
+                                {
+                                    flag = this.worldObj.func_147480_a(j2, k, l, true) || flag;
+                                }
+                            }
+                        }
+                    }
+
+                    if (flag)
+                    {
+                        this.worldObj.playAuxSFXAtEntity((EntityPlayer)null, 1012, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
+                    }
+                }
+            }
+
+            if (this.ticksExisted % 20 == 0)
+            {
+                this.heal(1.0F);
+            }
+        }
+    }
+
+    @Override
+    public void func_82206_m()
+    {
+        this.func_82215_s(220);
+        this.setHealth(this.getMaxHealth() / 3.0F);
+    }
+
+    /**
+     * Sets the Entity inside a web block.
+     */
+    @Override
+    public void setInWeb() {}
+
+    /**
+     * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+     */
+    @Override
+    public int getTotalArmorValue()
+    {
+        return 4;
     }
 
     private double func_82214_u(int p_82214_1_)
@@ -214,6 +477,207 @@ public class EntityWitherTFC extends EntityWither implements IInnateArmor
         entitywitherskulltfc.posX = d3;
         entitywitherskulltfc.posZ = d5;
         this.worldObj.spawnEntityInWorld(entitywitherskulltfc);
+        TerraFirmaCraft.LOG.info("spawnEntity");
+    }
+
+    /**
+     * Attack the specified entity using a ranged attack.
+     */
+    @Override
+    public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
+    {
+        this.func_82216_a(0, p_82196_1_);
+    }
+
+    /**
+     * Called when the entity is attacked.
+     */
+    @Override
+    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
+    {
+        if (this.isEntityInvulnerable())
+        {
+            return false;
+        }
+        else if (p_70097_1_ == DamageSource.drown)
+        {
+            return false;
+        }
+        else if (this.func_82212_n() > 0)
+        {
+            return false;
+        }
+        else
+        {
+            Entity entity;
+
+            if (this.isArmored())
+            {
+                entity = p_70097_1_.getSourceOfDamage();
+
+                if (entity instanceof EntityArrow)
+                {
+                    return false;
+                }
+            }
+
+            entity = p_70097_1_.getEntity();
+
+            if (entity != null && !(entity instanceof EntityPlayer) && entity instanceof EntityLivingBase && ((EntityLivingBase)entity).getCreatureAttribute() == this.getCreatureAttribute())
+            {
+                return false;
+            }
+            else
+            {
+                if (this.field_82222_j <= 0)
+                {
+                    this.field_82222_j = 20;
+                }
+
+                for (int i = 0; i < this.field_82224_i.length; ++i)
+                {
+                    this.field_82224_i[i] += 3;
+                }
+
+                return super.attackEntityFrom(p_70097_1_, p_70097_2_);
+            }
+        }
+    }
+
+    /**
+     * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+     * par2 - Level of Looting used to kill this mob.
+     */
+    @Override
+    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    {
+        this.dropItem(Items.nether_star, 1);
+
+        if (!this.worldObj.isRemote)
+        {
+            Iterator iterator = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(50.0D, 100.0D, 50.0D)).iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityPlayer entityplayer = (EntityPlayer)iterator.next();
+                entityplayer.triggerAchievement(AchievementList.field_150964_J);
+            }
+        }
+    }
+
+    /**
+     * Makes the entity despawn if requirements are reached
+     */
+    @Override
+    protected void despawnEntity()
+    {
+        this.entityAge = 0;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getBrightnessForRender(float p_70070_1_)
+    {
+        return 15728880;
+    }
+
+    /**
+     * Called when the mob is falling. Calculates and applies fall damage.
+     */
+    @Override
+    protected void fall(float p_70069_1_) {}
+
+    /**
+     * adds a PotionEffect to the entity
+     */
+    @Override
+    public void addPotionEffect(PotionEffect p_70690_1_) {}
+
+    /**
+     * Returns true if the newer Entity AI code should be run
+     */
+    @Override
+    protected boolean isAIEnabled()
+    {
+        return true;
+    }
+
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(TFC_MobData.WITHER_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(TFC_MobData.WITHER_HEALTH);//MaxHealth
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.6000000238418579D);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
+    }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float func_82207_a(int p_82207_1_)
+    {
+        return this.field_82221_e[p_82207_1_];
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float func_82210_r(int p_82210_1_)
+    {
+        return this.field_82220_d[p_82210_1_];
+    }
+
+    @Override
+    public int func_82212_n()
+    {
+        return this.dataWatcher.getWatchableObjectInt(20);
+    }
+
+    @Override
+    public void func_82215_s(int p_82215_1_)
+    {
+        this.dataWatcher.updateObject(20, Integer.valueOf(p_82215_1_));
+    }
+
+    /**
+     * Returns the target entity ID if present, or -1 if not @param par1 The target offset, should be from 0-2
+     */
+    @Override
+    public int getWatchedTargetId(int p_82203_1_)
+    {
+        return this.dataWatcher.getWatchableObjectInt(17 + p_82203_1_);
+    }
+
+    @Override
+    public void func_82211_c(int p_82211_1_, int p_82211_2_)
+    {
+        this.dataWatcher.updateObject(17 + p_82211_1_, Integer.valueOf(p_82211_2_));
+    }
+
+    /**
+     * Returns whether the wither is armored with its boss armor or not by checking whether its health is below half of
+     * its maximum.
+     */
+    @Override
+    public boolean isArmored()
+    {
+        return this.getHealth() <= this.getMaxHealth() / 2.0F;
+    }
+
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
+    @Override
+    public EnumCreatureAttribute getCreatureAttribute()
+    {
+        return EnumCreatureAttribute.UNDEAD;
+    }
+
+    /**
+     * Called when a player mounts an entity. e.g. mounts a pig, mounts a boat.
+     */
+    @Override
+    public void mountEntity(Entity p_70078_1_)
+    {
+        this.ridingEntity = null;
     }
 
     @Override
@@ -227,6 +691,12 @@ public class EntityWitherTFC extends EntityWither implements IInnateArmor
     @Override
     public int getPierceArmor() {
         return 100;//this is not an error. this makes piercing damage useless.
+    }
+
+    @Override
+    public EnumDamageType getDamageType()
+    {
+        return EnumDamageType.CRUSHING;
     }
 
 }

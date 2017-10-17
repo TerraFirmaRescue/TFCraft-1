@@ -1,5 +1,6 @@
 package com.bioxx.tfc.Entities;
 
+import com.bioxx.tfc.TerraFirmaCraft;
 import com.bioxx.tfc.api.Enums.EnumDamageType;
 import com.bioxx.tfc.api.Interfaces.ICausesDamage;
 import net.minecraft.entity.Entity;
@@ -53,6 +54,7 @@ public class EntityFireballTFC extends EntityFireball  implements ICausesDamage 
         if (p_70227_1_.entityHit != null)
         {
             p_70227_1_.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 120F);
+            TerraFirmaCraft.LOG.info("Fireball Hit");
         }
 
         this.worldObj.newExplosion((Entity)null, this.posX, this.posY, this.posZ, (float)this.field_92057_e, true, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
@@ -62,6 +64,6 @@ public class EntityFireballTFC extends EntityFireball  implements ICausesDamage 
     @Override
     public EnumDamageType getDamageType()
     {
-        return EnumDamageType.PIERCING;
+        return EnumDamageType.CRUSHING;
     }
 }

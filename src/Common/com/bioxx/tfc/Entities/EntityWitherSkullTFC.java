@@ -1,5 +1,6 @@
 package com.bioxx.tfc.Entities;
 
+import com.bioxx.tfc.TerraFirmaCraft;
 import com.bioxx.tfc.api.Enums.EnumDamageType;
 import com.bioxx.tfc.api.Interfaces.ICausesDamage;
 import cpw.mods.fml.relauncher.Side;
@@ -67,18 +68,22 @@ public class EntityWitherSkullTFC extends EntityFireballTFC implements ICausesDa
     {
         if (!this.worldObj.isRemote)
         {
+            TerraFirmaCraft.LOG.info("Hit");
             if (p_70227_1_.entityHit != null)
             {
                 if (this.shootingEntity != null)
                 {
+                    TerraFirmaCraft.LOG.info("Hit 2");
                     if (p_70227_1_.entityHit.attackEntityFrom(DamageSource.causeMobDamage(this.shootingEntity), 8.0F) && !p_70227_1_.entityHit.isEntityAlive())
                     {
                         this.shootingEntity.heal(5.0F);
+                        TerraFirmaCraft.LOG.info("Heal?");
                     }
                 }
                 else
                 {
-                    p_70227_1_.entityHit.attackEntityFrom(DamageSource.magic, 5.0F);
+                    p_70227_1_.entityHit.attackEntityFrom(DamageSource.magic, 50.0F);
+                    TerraFirmaCraft.LOG.info("Skull Smack");
                 }
 
                 if (p_70227_1_.entityHit instanceof EntityLivingBase)
@@ -97,12 +102,14 @@ public class EntityWitherSkullTFC extends EntityFireballTFC implements ICausesDa
                     if (b0 > 0)
                     {
                         ((EntityLivingBase)p_70227_1_.entityHit).addPotionEffect(new PotionEffect(Potion.wither.id, 20 * b0, 1));
+                        TerraFirmaCraft.LOG.info("Wither");
                     }
                 }
             }
 
             this.worldObj.newExplosion(this, this.posX, this.posY, this.posZ, 1.0F, false, this.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing"));
             this.setDead();
+            TerraFirmaCraft.LOG.info("Explode");
         }
     }
 
