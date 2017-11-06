@@ -40,7 +40,7 @@ public class EntityWitherTFC extends EntityWither implements IInnateArmor, ICaus
     /** Selector used to determine the entities a wither boss should attack. */
     private static final IEntitySelector attackEntitySelector = new IEntitySelector()
     {
-        private static final String __OBFID = "CL_00001662";
+
         /**
          * Return whether the specified entity is applicable to this filter.
          */
@@ -49,7 +49,7 @@ public class EntityWitherTFC extends EntityWither implements IInnateArmor, ICaus
             return p_82704_1_ instanceof EntityLivingBase && ((EntityLivingBase)p_82704_1_).getCreatureAttribute() != EnumCreatureAttribute.UNDEAD;
         }
     };
-    private static final String __OBFID = "CL_00001661";
+
 
     public EntityWitherTFC(World par1World)
     {
