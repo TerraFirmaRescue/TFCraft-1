@@ -2,21 +2,20 @@ package com.bioxx.tfc.Items;
 
 import java.util.List;
 
-import com.bioxx.tfc.Items.ItemTerra;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import com.bioxx.tfc.Reference;
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.Core.TFC_Core;
-import com.bioxx.tfc.api.Metal;
-import com.bioxx.tfc.api.TFCOptions;
+import com.bioxx.tfc.Reference;
 import com.bioxx.tfc.api.Constant.Global;
 import com.bioxx.tfc.api.Enums.EnumSize;
 import com.bioxx.tfc.api.Enums.EnumWeight;
 import com.bioxx.tfc.api.Interfaces.ISmeltable;
+import com.bioxx.tfc.api.Metal;
+import com.bioxx.tfc.api.TFCOptions;
 
 public class ItemOre extends ItemTerra implements ISmeltable
 {
@@ -297,7 +296,7 @@ public class ItemOre extends ItemTerra implements ISmeltable
 		case 12: return EnumTier.TierI;
 		case 13: return EnumTier.TierI;
 		case 14: return EnumTier.TierIV;
-		case 15: return EnumTier.TierIII;
+		case 15: return EnumTier.TierIV;
 		case 16: return EnumTier.TierIV;
 		case 17: return EnumTier.TierIV;
 		//Rich Ores
@@ -316,7 +315,7 @@ public class ItemOre extends ItemTerra implements ISmeltable
 		case 30: return EnumTier.TierI;
 		case 31: return EnumTier.TierI;
 		case 32: return EnumTier.TierIV;
-		case 33: return EnumTier.TierIII;
+		case 33: return EnumTier.TierIV;
 		case 34: return EnumTier.TierIV;
 		case 35: return EnumTier.TierIV;
 		//Poor Ores
@@ -335,7 +334,7 @@ public class ItemOre extends ItemTerra implements ISmeltable
 		case 48: return EnumTier.TierI;
 		case 49: return EnumTier.TierI;
 		case 50: return EnumTier.TierIV;
-		case 51: return EnumTier.TierIII;
+		case 51: return EnumTier.TierIV;
 		case 52: return EnumTier.TierIV;
 		case 53: return EnumTier.TierIV;
 		}

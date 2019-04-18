@@ -999,9 +999,9 @@ public class ItemSetup extends TFCItems {
 		MetalRegistry.instance.addMetal(Global.TIN, Alloy.EnumTier.TierI);
 		MetalRegistry.instance.addMetal(Global.ZINC, Alloy.EnumTier.TierI);
 		MetalRegistry.instance.addMetal(Global.ELECTRUM, Alloy.EnumTier.TierI);
-		MetalRegistry.instance.addMetal(Global.CUPRONICKEL, Alloy.EnumTier.TierI);
+		MetalRegistry.instance.addMetal(Global.CUPRONICKEL, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.OSMIUM, Alloy.EnumTier.TierV);
-		MetalRegistry.instance.addMetal(Global.ALUMINUM, Alloy.EnumTier.TierI);
+		MetalRegistry.instance.addMetal(Global.ALUMINUM, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.TUNGSTEN, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.WEAKSTEEL, Alloy.EnumTier.TierV);
 		MetalRegistry.instance.addMetal(Global.HCBLACKSTEEL, Alloy.EnumTier.TierV);

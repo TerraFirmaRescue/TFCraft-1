@@ -1,13 +1,13 @@
 package com.bioxx.tfc.Items;
 
+import net.minecraft.item.ItemStack;
+
 import com.bioxx.tfc.Core.TFCTabs;
 import com.bioxx.tfc.api.Constant.Global;
 import com.bioxx.tfc.api.Enums.EnumSize;
 import com.bioxx.tfc.api.Enums.EnumWeight;
 import com.bioxx.tfc.api.Interfaces.ISmeltable;
 import com.bioxx.tfc.api.Metal;
-import com.bioxx.tfc.api.TFCOptions;
-import net.minecraft.item.ItemStack;
 
 public class ItemMetal extends ItemOreSmall implements ISmeltable
 {
@@ -50,7 +50,7 @@ public class ItemMetal extends ItemOreSmall implements ISmeltable
             case 10: return Global.TIN;
             case 11: return Global.ZINC;
             case 12: return Global.OSMIUM;
-            case 13: if(TFCOptions.enableAluminumSmelting) { return Global.ALUMINUM; } else { return null; }
+            case 13: return Global.ALUMINUM;
             case 14: return Global.TUNGSTEN;
             case 15: return Global.BISMUTHBRONZE;
             case 16: return Global.BLACKBRONZE;
