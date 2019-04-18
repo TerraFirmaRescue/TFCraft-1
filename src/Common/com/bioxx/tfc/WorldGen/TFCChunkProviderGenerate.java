@@ -1,10 +1,17 @@
 package com.bioxx.tfc.WorldGen;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
+import com.bioxx.tfc.Blocks.Terrain.BlockCollapsible;
+import com.bioxx.tfc.Chunkdata.ChunkData;
+import com.bioxx.tfc.Core.TFC_Climate;
+import com.bioxx.tfc.Core.TFC_Core;
+import com.bioxx.tfc.Core.TFC_Time;
+import com.bioxx.tfc.Entities.Mobs.*;
+import com.bioxx.tfc.WorldGen.MapGen.MapGenCavesTFC;
+import com.bioxx.tfc.WorldGen.MapGen.MapGenRavineTFC;
+import com.bioxx.tfc.WorldGen.MapGen.MapGenRiverRavine;
+import com.bioxx.tfc.api.Constant.Global;
+import com.bioxx.tfc.api.TFCBlocks;
+import com.bioxx.tfc.api.TFCOptions;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
@@ -16,22 +23,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
-
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 
-import com.bioxx.tfc.Blocks.Terrain.BlockCollapsible;
-import com.bioxx.tfc.Chunkdata.ChunkData;
-import com.bioxx.tfc.Core.TFC_Climate;
-import com.bioxx.tfc.Core.TFC_Core;
-import com.bioxx.tfc.Core.TFC_Time;
-import com.bioxx.tfc.Entities.Mobs.*;
-import com.bioxx.tfc.WorldGen.MapGen.MapGenCavesTFC;
-import com.bioxx.tfc.WorldGen.MapGen.MapGenRavineTFC;
-import com.bioxx.tfc.WorldGen.MapGen.MapGenRiverRavine;
-import com.bioxx.tfc.api.TFCBlocks;
-import com.bioxx.tfc.api.TFCOptions;
-import com.bioxx.tfc.api.Constant.Global;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class TFCChunkProviderGenerate extends ChunkProviderGenerate
 {

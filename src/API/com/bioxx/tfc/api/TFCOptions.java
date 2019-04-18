@@ -27,6 +27,7 @@ public class TFCOptions
 	public static int hammerBreakSpeed = 90;
 	public static boolean enableToolModeIndicator = true;
 	public static int recursionLimit = 220;
+	public static int chunkregenLimit = 100;
 	public static int bleedEffectID = 28;
 	public static int heatStrokeEffectID = 29;
 
