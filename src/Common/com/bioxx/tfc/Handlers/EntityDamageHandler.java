@@ -27,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.common.ISpecialArmor;
 
 import java.util.Random;
 
@@ -109,6 +110,11 @@ public class EntityDamageHandler
 
 	protected int applyArmorCalculations(EntityLivingBase entity, DamageSource source, float originalDamage)
 	{
+		if(entity instanceof EntityPlayer)
+        	{
+            		EntityPlayer player = (EntityPlayer) entity;
+           		originalDamage = ISpecialArmor.ArmorProperties.ApplyArmor(player, player.inventory.armorInventory, source, originalDamage * 0.048F)/0.048F;
+        	}
 		ItemStack[] armor = entity.getLastActiveItems();
 		int pierceRating = 0;
 		int slashRating = 0;
