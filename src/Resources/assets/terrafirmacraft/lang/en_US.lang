@@ -288,6 +288,15 @@ item.Orange.name=Orange
 item.Peach.name=Peach
 item.Plum.name=Plum
 
+item.FruitSapling.Green Apple.name=Green Apple Tree Sapling
+item.FruitSapling.Red Apple.name=Red Apple Tree Sapling
+item.FruitSapling.Banana.name=Banana Tree Sapling
+item.FruitSapling.Cherry.name=Cherry Tree Sapling
+item.FruitSapling.Lemon.name=Lemon Tree Sapling
+item.FruitSapling.Olive.name=Olive Tree Sapling
+item.FruitSapling.Orange.name=Orange Tree Sapling
+item.FruitSapling.Peach.name=Peach Tree Sapling
+item.FruitSapling.Plum.name=Plum Tree Sapling
 tile.fruitTreeSapling.Green Apple.name=Green Apple Tree Sapling
 tile.fruitTreeSapling.Red Apple.name=Red Apple Tree Sapling
 tile.fruitTreeSapling.Banana.name=Banana Tree Sapling
@@ -875,6 +884,27 @@ tile.MMRockBrick.Slate.name=Slate Bricks
 #= Ore =
 #=======
 #== Ore Items ==
+item.Ore.Bituminous Coal.name=Bituminous Coal
+item.Ore.Borax.name=Borax
+item.Ore.Cinnabar.name=Cinnabar
+item.Ore.Cryolite.name=Cryolite
+item.Ore.Graphite.name=Graphite
+item.Ore.Gypsum.name=Datolite
+item.Ore.Jet.name=Stibnite
+item.Ore.Kaolinite.name=Kaolinite
+item.Ore.Kimberlite.name=Kimberlite
+item.Ore.Lapis Lazuli.name=Lapis Lazuli
+item.Ore.Lignite.name=Lignite
+item.Ore.Microcline.name=Microcline
+item.Ore.Olivine.name=Olivine
+item.Ore.Petrified Wood.name=Petrified Wood
+item.Ore.Pitchblende.name=Pitchblende
+item.Ore.Saltpeter.name=Saltpeter
+item.Ore.Satinspar.name=Trona
+item.Ore.Selenite.name=Bischofite
+item.Ore.Serpentine.name=Beryl
+item.Ore.Sulfur.name=Sulfur
+item.Ore.Sylvite.name=Sylvite
 item.MineralOre.Bituminous Coal.name=Bituminous Coal
 item.MineralOre.Borax.name=Borax
 item.MineralOre.Cinnabar.name=Cinnabar
@@ -900,7 +930,6 @@ item.MineralOre.Apatite.name=Apatite
 item.MineralOre.Scapolite.name=Scapolite
 item.MineralOre.Strontium.name=Strontium
 item.MineralOre.Quartz.name=Quartz
-
 item.Ore.Bismuthinite.name=Bismuthinite
 item.Ore.Cassiterite.name=Cassiterite
 item.Ore.Galena.name=Galena
@@ -997,6 +1026,28 @@ item.Ore Pile.Tetrahedrite.name=Tetrahedrite Ore Pile
 item.Ore Pile.Wolframite.name=Wolframite Ore Pile
 
 #== Ore Blocks ==
+tile.Ore.name=Ore
+tile.Ore.Bituminous Coal.name=Bituminous Coal
+tile.Ore.Borax.name=Borax
+tile.Ore.Cinnabar.name=Cinnabar
+tile.Ore.Cryolite.name=Cryolite
+tile.Ore.Graphite.name=Graphite
+tile.Ore.Gypsum.name=Datolite
+tile.Ore.Jet.name=Stibnite
+tile.Ore.Kaolinite.name=Kaolinite
+tile.Ore.Kimberlite.name=Kimberlite
+tile.Ore.Lapis Lazuli.name=Lapis Lazuli
+tile.Ore.Lignite.name=Lignite
+tile.Ore.Microcline.name=Microcline
+tile.Ore.Olivine.name=Olivine
+tile.Ore.Petrified Wood.name=Petrified Wood
+tile.Ore.Pitchblende.name=Pitchblende
+tile.Ore.Saltpeter.name=Saltpeter
+tile.Ore.Satinspar.name=Trona
+tile.Ore.Selenite.name=Bischofite
+tile.Ore.Serpentine.name=Beryl
+tile.Ore.Sulfur.name=Sulfur
+tile.Ore.Sylvite.name=Sylvite
 tile.MineralOre.name=Ore
 tile.MineralOre.Bituminous Coal.name=Bituminous Coal
 tile.MineralOre.Lignite.name=Lignite
@@ -1916,6 +1967,35 @@ item.Wrought Iron Unshaped.name=Unshaped: Wrought Iron
 item.Zinc Unshaped.name=Unshaped: Zinc
 item.Electrum Unshaped.name=Unshaped: Electrum
 item.Cupronickel Unshaped.name=Unshaped: Cupronickel
+
+#== Nugget ==
+
+item.MetalNugget.Bismuth.name=Bismuth Nugget
+item.MetalNugget.Bismuth Bronze.name=Bismuth Bronze Nugget
+item.MetalNugget.Black Bronze.name=Black Bronze Nugget
+item.MetalNugget.Black Steel.name=Black Steel Nugget
+item.MetalNugget.Blue Steel.name=Blue Steel Nugget
+item.MetalNugget.Brass.name=Brass Nugget
+item.MetalNugget.Bronze.name=Bronze Nugget
+item.MetalNugget.Copper.name=Copper Nugget
+item.MetalNugget.Gold.name=Gold Nugget
+item.MetalNugget.Wrought Iron.name=Wrought Iron Nugget
+item.MetalNugget.Lead.name=Lead Nugget
+item.MetalNugget.Nickel.name=Nickel Nugget
+item.MetalNugget.Pig Iron.name=Pig Iron Nugget
+item.MetalNugget.Platinum.name=Platinum Nugget
+item.MetalNugget.Red Steel.name=Red Steel Nugget
+item.MetalNugget.Rose Gold.name=Rose Gold Nugget
+item.MetalNugget.Silver.name=Silver Nugget
+item.MetalNugget.Steel.name=Steel Nugget
+item.MetalNugget.Sterling Silver.name=Sterling Silver Nugget
+item.MetalNugget.Tin.name=Tin Nugget
+item.MetalNugget.Zinc.name=Zinc Nugget
+item.MetalNugget.Electrum.name=Electrum Nugget
+item.MetalNugget.Cupronickel.name=Cupronickel Nugget
+
+item.Electrum Unshaped.name=Unshaped: Electrum
+item.Cupronickel Unshaped.name=Unshaped: Cupronickel
 item.Osmium Unshaped.name=Unshaped: Osmium
 item.Aluminum Unshaped.name=Unshaped: Aluminum
 item.Tungsten Unshaped.name=Unshaped: Tungsten
@@ -2022,6 +2102,7 @@ item.Wrought Iron Ingot.name=Wrought Iron Ingot
 item.Zinc Ingot.name=Zinc Ingot
 item.Electrum Ingot.name=Electrum Ingot
 item.Cupronickel Ingot.name=Cupronickel Ingot
+
 item.Osmium Ingot.name=Osmium Ingot
 item.Aluminum Ingot.name=Aluminum Ingot
 item.Tungsten Ingot.name=Tungsten Ingot
