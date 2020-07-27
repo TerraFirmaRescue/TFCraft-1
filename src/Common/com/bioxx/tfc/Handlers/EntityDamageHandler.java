@@ -1,7 +1,15 @@
 package com.bioxx.tfc.Handlers;
 
-import java.util.Random;
-
+import com.bioxx.tfc.Core.Player.FoodStatsTFC;
+import com.bioxx.tfc.Core.TFC_Core;
+import com.bioxx.tfc.Core.TFC_MobData;
+import com.bioxx.tfc.Entities.EntityJavelin;
+import com.bioxx.tfc.Items.ItemTFCArmor;
+import com.bioxx.tfc.api.Enums.EnumDamageType;
+import com.bioxx.tfc.api.Events.EntityArmorCalcEvent;
+import com.bioxx.tfc.api.Interfaces.ICausesDamage;
+import com.bioxx.tfc.api.Interfaces.IInnateArmor;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.EntityDragonPart;
@@ -15,23 +23,13 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.MathHelper;
-
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.common.ISpecialArmor;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-
-import com.bioxx.tfc.Core.TFC_Core;
-import com.bioxx.tfc.Core.TFC_MobData;
-import com.bioxx.tfc.Core.Player.FoodStatsTFC;
-import com.bioxx.tfc.Entities.EntityJavelin;
-import com.bioxx.tfc.Items.ItemTFCArmor;
-import com.bioxx.tfc.api.Enums.EnumDamageType;
-import com.bioxx.tfc.api.Events.EntityArmorCalcEvent;
-import com.bioxx.tfc.api.Interfaces.ICausesDamage;
-import com.bioxx.tfc.api.Interfaces.IInnateArmor;
+import java.util.Random;
 
 public class EntityDamageHandler
 {
@@ -56,8 +54,8 @@ public class EntityDamageHandler
 		}
 		else if(event.source == DamageSource.fall)
 		{
-			float healthMod = TFC_Core.getEntityMaxHealth(entity)/1000f;
-			event.ammount *= 80*healthMod;
+			//float healthMod = TFC_Core.getEntityMaxHealth(entity)/1000f;
+			event.ammount *= 80/*healthMod*/;
 		}
 		else if(event.source == DamageSource.drown)
 		{
@@ -79,9 +77,18 @@ public class EntityDamageHandler
 		{
 			event.ammount *= 30;
 		}
-		else if (event.source == DamageSource.magic && entity.getHealth() > 25)
+		else if (event.source == DamageSource.magic)
+		{
+			if ((entity.getHealth() - 25) > (TFC_Core.getEntityMaxHealth(entity)/10f))
 		{
 			event.ammount = 25;
+		}
+			else
+				event.ammount = (entity.getHealth() - (TFC_Core.getEntityMaxHealth(entity)/10f));
+		}
+		else if (event.source == DamageSource.wither)
+		{
+			event.ammount = 50;
 		}
 		else if ("player".equals(event.source.damageType) || "mob".equals(event.source.damageType) || "arrow".equals(event.source.damageType))
 		{
@@ -397,5 +404,22 @@ public class EntityDamageHandler
 			}
 		}
 		event.setCanceled(true);
+	}
+	@SubscribeEvent
+	public void onHeal(LivingHealEvent event)
+	{
+		EntityLivingBase entity = event.entityLiving;
+		if(entity.isPotionActive(Potion.heal))
+			if(event.amount > 1 && event.amount < 9)
+				event.amount = event.amount * (entity.getMaxHealth() * 0.025f);
+	}
+	@SubscribeEvent
+	public void  onRegenHeal(LivingHealEvent event)
+	{
+		EntityLivingBase entity = event.entityLiving;
+		if (entity.isPotionActive(Potion.regeneration))
+		{
+				event.amount = event.amount * (entity.getMaxHealth() * 0.01f);
+		}
 	}
 }
