@@ -1463,7 +1463,8 @@ public class Recipes
 				new ItemStack(TFCItems.aluminumSheet)));
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.tungstenIngot2x), null, "sheet", false, AnvilReq.STEEL,
 				new ItemStack(TFCItems.tungstenSheet)));
-//Sheets2x
+		/*
+		//Sheets2x
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.bismuthBronzeSheet2x), new ItemStack(TFCItems.bismuthBronzeSheet2x),"block", AnvilReq.BISMUTHBRONZE,
 				new ItemStack(TFCBlocks.metalAlloyBlock, 1, 0)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.blackBronzeSheet2x), new ItemStack(TFCItems.blackBronzeSheet2x),"block", AnvilReq.BLACKBRONZE,
@@ -1486,6 +1487,7 @@ public class Recipes
 				new ItemStack(TFCBlocks.metalAlloyBlock, 1, 9)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.cupronickelSheet2x), new ItemStack(TFCItems.cupronickelSheet2x),"block", AnvilReq.STONE,
 				new ItemStack(TFCBlocks.metalAlloyBlock, 1, 10)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
+
 //Blocks
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.bismuthSheet2x), new ItemStack(TFCItems.bismuthSheet2x),"block", AnvilReq.STONE,
 				new ItemStack(TFCBlocks.metalBlock, 1, 0)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
@@ -1517,6 +1519,7 @@ public class Recipes
 				new ItemStack(TFCBlocks.metalBlock, 1, 13)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.tungstenSheet2x), new ItemStack(TFCItems.tungstenSheet2x),"block", AnvilReq.STEEL,
 				new ItemStack(TFCBlocks.metalBlock, 1, 14)).addRecipeSkill(Global.SKILL_GENERAL_SMITHING).setCraftingXP(1));
+		 */
 //Tools
 		//Picks
 		manager.addRecipe(new AnvilRecipe(new ItemStack(TFCItems.bismuthBronzeIngot), null, "pickaxe", AnvilReq.BISMUTHBRONZE,
